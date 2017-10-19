@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>VISION</title>
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<style>
+body {
+    background: #ffffff;
+    color: green;
+    font-family: arial;
+	font-size:1.5em
+}
+.result {
+    display:block;
+    width:60%;
+    height:50px;
+    background-color:#ffffff;
+    overflow:hidden;
+    }
+</style>
+<script>
+// Объявляем переменные
+var socket = new WebSocket('wss://ws.golos.io'), 
+lastblock, startblock, ail;
+// Открываем сокет 
+socket.onopen = function(event) {
+// Выставляем интервал в 3000 ms
+       setTimeout(function() { 
+	   socket.send(JSON.stringify({ // Отправляем запрос
+            id: 1,
+             method: 'get_accounts',
+            'params': [["rezonator"]]
+        }));
+		lastblock++;  // Увеличиваем на 1 значение данной переменной при каждом выполнении функции (каждые 3 секунды)                         
+		},  );                               
+};
+socket.onmessage = function(event) {
+		data = JSON.parse(event.data);
+	startblock = data.result[0]; // Та самая переменная, которую мы добавили
+	$login = data.result[0].name;
+	$sbd = data.result[0].sbd_balance;
+	$gol = data.result[0].balance;
+console.log(startblock); // Укажем переменную в лог консоли, что бы проверить все ли верно
+				document.getElementById('result').insertAdjacentHTML('beforeend',$login);
+				document.getElementById('ssss').insertAdjacentHTML('beforeend',$sbd);
+				document.getElementById('balu').insertAdjacentHTML('beforeend',$gol);
+				 };
+</script>
+</head>
+<body>
+<div id="result" class="result">Аккаунт: ............ </div>
+<div id="balu" class="result">Баланс: ............. </div>
+<div id="ssss" class="result">Баланс: ............. </div>
+</body>
+</html>
